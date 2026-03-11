@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bot AI di Omar</title>
+  <style>
+    body { 
+      font-family: Arial; 
+      background-color: #000; 
+      color: #fff; 
+      text-align: center; 
+      padding: 30px;
+    }
+    #chatbox { 
+      border: 1px solid #555; 
+      width: 90%; 
+      max-width: 400px; 
+      height: 400px; 
+      overflow-y: auto; 
+      margin: 20px auto; 
+      background-color: #111; 
+      padding: 10px; 
+      border-radius: 10px;
+    }
+    input { 
+      width: 60%; 
+      padding: 10px; 
+      border-radius: 5px; 
+      border: none; 
+      outline: none; 
+    }
+    button { 
+      padding: 10px; 
+      border-radius: 5px; 
+      border: none; 
+      cursor: pointer; 
+      background-color: #0a84ff; 
+      color: white; 
+      font-weight: bold;
+    }
+    .user { color: #0af; text-align: left; }
+    .bot { color: #0f0; text-align: left; }
+    #start { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<h1>🤖 Bot AI di Omar</h1>
+
+<div id="chatbox"></div>
+
+<div id="start">
+  <button onclick="inizia()">Inizia Chat</button>
+</div>
+
+<div id="inputDiv" style="display:none;">
+  <input id="userInput" placeholder="Scrivi qui...">
+  <button onclick="sendMessage()">Invia</button>
+</div>
+
+<script>
+// Array di risposte base
+const risposte = [
+  { keywords: ["ciao","hello"], reply: "Ciao! 😊 Come va oggi?" },
+  { keywords: ["come ti chiami"], reply: "Sono il tuo Bot AI personale! 🤖" },
+  { keywords: ["wolof"], reply: "Ndax nga def? Posso parlarti anche in wolof!" },
+  { keywords: ["emoji"], reply: "Ecco un sorriso 😄" },
+  { keywords: ["rocket league"], reply: "Vuoi consigli su freestyling o partite competitive?" },
+  { keywords: ["scuola","compiti"], reply: "Dimmi, vuoi aiuto con i compiti o suggerimenti?" }
+];
+
+// Funzione per avviare la chat
+function inizia() {
+  document.getElementById("start").style.display = "none";
+  document.getElementById("inputDiv").style.display = "block";
+  const chatbox = document.getElementById("chatbox");
+  chatbox.innerHTML += "<p class='bot'>Bot: Ciao Omar! Sono pronto a parlare 😎</p>";
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+// Funzione principale del bot
+function sendMessage(){
+  const input = document.getElementById("userInput").value;
+  if(!input) return;
+
+  const chatbox = document.getElementById("chatbox");
+  chatbox.innerHTML += "<p class='user'>Tu: " + input + "</p>";
+
+  let risposta = "Hmm 🤔 non so cosa rispondere, prova a scrivere altro.";
+
+  // Controlla risposte base
+  for(let r of risposte){
+    if(r.keywords.some(k => input.toLowerCase().includes(k))){
+      risposta = r.reply;
+      break;
+    }
+  }
+
+  // Controlla ora/data
+  if(input.toLowerCase().includes("ora")){
+    const now = new Date();
+    risposta = `Ora: ${now.getHours()}:${now.getMinutes()} 🕒`;
+  }
+  if(input.toLowerCase().includes("giorno") || input.toLowerCase().includes("data")){
+    const today = new Date();
+    risposta = `Oggi è ${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()} 📅`;
+  }
+
+  // Controlla calcoli base
+  try {
+    if(/[\d\s\+\-\*\/\(\)]/.test(input)){
+      let calc = input.replace(/[^0-9\+\-\*\/\.\(\) ]/g,"");
+      let result = eval(calc);
+      if(!isNaN(result)) risposta = "Il risultato è: " + result + " ✅";
+    }
+  } catch(e){}
+
+  chatbox.innerHTML += "<p class='bot'>Bot: " + risposta + "</p>";
+  document.getElementById("userInput").value = "";
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+</script>
+
+</body>
+    </html>
